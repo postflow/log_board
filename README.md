@@ -22,7 +22,7 @@ In your `pubspec.yaml`:
 dependencies:
   log_board:
     git:
-      url: https://github.com/your-username/log_board.git
+      url: https://github.com/postflow/log_board
 ```
 
 ## 🛠️ Quick Start
