@@ -1,0 +1,99 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code related (раскомментируй, если не хочешь коммитить конфиги)
+# .vscode/
+
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+generated_plugin_registrant.dart
+.melos_tool/
+pubspec.lock # для пакетов/библиотек, оставить можно только для приложений
+
+# Android specific
+android/.gradle/
+android/captures/
+android/local.properties
+android/.idea/
+*.jks
+*.keystore
+
+# iOS/macOS specific
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Generated.xcconfig
+ios/.symlinks/
+ios/Pods/
+ios/Runner.xcworkspace/
+ios/build/
+macos/Flutter/GeneratedPluginRegistrant.swift
+macos/.symlinks/
+macos/Pods/
+macos/build/
+
+# Web specific
+web/.dart_tool/
+web/build/
+
+# Windows specific
+windows/build/
+windows/.vs/
+
+# Linux specific
+linux/build/
+
+# Fuchsia specific
+fuchsia/build/
+
+# Firebase & Crashlytics (если используешь)
+*.firebase/
+*.crt
+*.p12
+
+# Environment and local config
+.env
+.env.*
+
+# Coverage
+coverage/
+*.lcov
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# Symbol files (dSYM, Proguard, etc.)
+*.symbols
+*.dSYM.zip
+*.mapping
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# VS Code project snippets
+.vscode/*.code-snippets

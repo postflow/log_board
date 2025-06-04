@@ -1,0 +1,34 @@
+name: log_board
+description: A Flutter package that intercepts and displays app logs in real-time using WebSocket and an HTML log viewer.
+version: 0.0.1
+homepage: https://github.com/postflow/log_board
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: 6.0.0
+
+flutter:
+  assets:
+    - assets/log_viewer.html
+
+
+topics:
+  - logging
+  - websocket
+  - debugging
+  - server
+  - tools
+
+platforms:
+  android:
+  ios:
+
