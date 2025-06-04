@@ -1,39 +1,138 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# LogBoard
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+**LogBoard** is a Flutter package that intercepts `print()` calls, `debugPrint()` output, and uncaught errors in your Flutter app, then broadcasts them to WebSocket clients. It also serves a built-in HTML log viewer over HTTP so you can view logs in real time from your browser — ideal for debugging on physical devices.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+---
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## 🚀 Features
 
-## Features
+- Captures `print` and `debugPrint`
+- Intercepts `FlutterError.onError` and uncaught exceptions
+- Broadcasts logs via WebSocket
+- Serves a real-time HTML log viewer over HTTP
+- Supports `subscribeOnServerStatus` for server lifecycle events
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+---
 
-## Getting started
+## 📦 Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+In your `pubspec.yaml`:
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  log_board:
+    git:
+      url: https://github.com/your-username/log_board.git
 ```
 
-## Additional information
+## 🛠️ Quick Start
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+import 'package:flutter/material.dart';
+import 'package:log_board/log_board.dart';
+
+LogServer? logServer;
+
+void main() async {
+  logServer = LogServer().init(
+    rootApp: () {
+      WidgetsFlutterBinding.ensureInitialized();
+      runApp(const MyApp());
+    },
+    port: 4040,
+  );
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isRunning = false;
+  int? _port;
+  String? _ipAddress;
+
+  _listener(ServerStatus serverStatus) {
+    setState(() {
+      _isRunning = serverStatus.isRunning;
+      if (_isRunning) {
+        _port = serverStatus.port;
+        _ipAddress = serverStatus.address?.address;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    logServer?.subscribeOnServerStatus(_listener);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Log Server Example')),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(child: Text(_isRunning
+                  ? 'Log server is running: http://$_ipAddress:$_port'
+                  : 'Log server not running')
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  logServer?.startServer();
+                },
+                child: const Text('start server'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  logServer?.stopServer();
+                },
+                child: const Text('stop server'),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  print('print to console');
+                },
+                child: const Text('print to console'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  debugPrint('debugPrint to console');
+                },
+                child: const Text('debugPrint to console'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  throw Exception('Test error');
+                },
+                child: const Text('throw Exception'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    logServer?.unSubscribe(_listener);
+    super.dispose();
+  }
+}
+```
+## Open the Viewer
+http://device-ip:4040
+
+(e.g. http://192.168.1.10:4040 on the same Wi-Fi network)
