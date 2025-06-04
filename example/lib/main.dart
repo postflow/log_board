@@ -25,7 +25,6 @@ class _MyAppState extends State<MyApp> {
   int? _port;
   String? _ipAddress;
 
-
   _listener(ServerStatus serverStatus) {
     setState(() {
       _isRunning = serverStatus.isRunning;
