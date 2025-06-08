@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Flutter Log Viewer</title>
-  <style>
-    body {
-      background: #1e1e1e;
-      color: #00ff88;
-      font-family: monospace;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <title>Flutter Log Viewer</title>
+    <style>
+        body {
+          background: #1e1e1e;
+          color: #00ff88;
+          font-family: monospace;
+          padding: 20px;
+        }
 
-    button {
-      margin-bottom: 10px;
-      padding: 5px 10px;
-      font-family: monospace;
-      font-size: 14px;
-      background-color: #333;
-      color: #00ff88;
-      border: 1px solid #00ff88;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        button {
+          margin-bottom: 10px;
+          padding: 5px 10px;
+          font-family: monospace;
+          font-size: 14px;
+          background-color: #333;
+          color: #00ff88;
+          border: 1px solid #00ff88;
+          border-radius: 4px;
+          cursor: pointer;
+        }
 
-    button:hover {
-      background-color: #444;
-    }
-
-    pre {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      border-top: 1px solid #00ff88;
-      padding-top: 10px;
-    }
-  </style>
+        button:hover {
+          background-color: #444;
+        }
+        pre {
+          white-space: pre-wrap;
+          word-wrap: break-word;
+          border-top: 1px solid #00ff88;
+          padding-top: 10px;
+          max-height: 80vh;
+          overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
 <h2>Flutter Log Viewer</h2>
@@ -41,32 +42,32 @@
 <pre id="log">Connecting...</pre>
 
 <script>
-  const logElement = document.getElementById("log");
-  const clearBtn = document.getElementById("clearBtn");
+    const logElement = document.getElementById("log");
+    const clearBtn = document.getElementById("clearBtn");
 
-  clearBtn.addEventListener('click', () => {
-    logElement.textContent = '';
-  });
+    clearBtn.addEventListener('click', () => {
+      logElement.textContent = '';
+    });
 
-  const ws = new WebSocket("ws://" + location.host + "/ws");
+    const ws = new WebSocket("ws://" + location.host + "/ws");
 
-  ws.onopen = () => {
-    logElement.textContent = "Connected to log server...\n";
-  };
+    ws.onopen = () => {
+      logElement.textContent = "Connected to log server...\n";
+    };
 
-  ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    logElement.textContent += data.log + "\n";
-    logElement.scrollTop = logElement.scrollHeight;
-  };
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      logElement.textContent += data.log + "\n";
+      logElement.scrollTop = logElement.scrollHeight;
+    };
 
-  ws.onerror = (e) => {
-    logElement.textContent += "WebSocket error: " + e.message + "\n";
-  };
+    ws.onerror = (e) => {
+      logElement.textContent += "WebSocket error: " + e.message + "\n";
+    };
 
-  ws.onclose = () => {
-    logElement.textContent += "Connection closed.\n";
-  };
+    ws.onclose = () => {
+      logElement.textContent += "Connection closed.\n";
+    };
 </script>
 </body>
 </html>

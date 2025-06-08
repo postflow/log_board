@@ -1,17 +1,18 @@
 # LogBoard
 
-**LogBoard** is a Flutter package that intercepts `print()` calls, `debugPrint()` output, and uncaught errors in your Flutter app, then broadcasts them to WebSocket clients. It also serves a built-in HTML log viewer over HTTP so you can view logs in real time from your browser — ideal for debugging on physical devices.
+**LogBoard** is especially useful for QA specialists who may not have a full Flutter development environment installed or access to Flutter DevTools. Since the logs are served over HTTP and viewable in any browser, QA testers can observe all logs — including print, debugPrint, uncaught exceptions, and network-related outputs — without needing to interact with the app UI or navigate to a separate in-app debug screen.
 
+This makes it easy to:
+- Test apps on real devices without using Android Studio or VS Code
+- Track logs in real time from a desktop browser
+- Observe network requests and internal app behavior
+- Share logs with developers without needing screenshots or recordings
 ---
-
 ## 🚀 Features
-
-- Captures `print` and `debugPrint`
-- Intercepts `FlutterError.onError` and uncaught exceptions
-- Broadcasts logs via WebSocket
-- Serves a real-time HTML log viewer over HTTP
-- Supports `subscribeOnServerStatus` for server lifecycle events
-
+- Captures everything printed to the Flutter console — including print(), debugPrint(), and uncaught errors
+- Allows you to view logs from your Flutter app directly in a browser window on another device (e.g. desktop, laptop, or tablet)
+- Provides a built-in HTML log viewer accessible via http://<device-ip>:<port>
+- Ideal for debugging on physical devices without needing to connect via IDE or cables
 ---
 
 ## 📦 Installation
@@ -39,7 +40,19 @@ void main() async {
       WidgetsFlutterBinding.ensureInitialized();
       runApp(const MyApp());
     },
-    port: 4040,
+    logTransformer: (log) {
+      final timestamp = DateTime.now().toIso8601String();
+      return '[$timestamp] $log';
+    },
+    flutterOnError: (FlutterErrorDetails details) {
+      // final error = details.exceptionAsString();
+      // final stack = details.stack?.toString() ?? 'No stack trace';
+      //
+      // final timestamp = DateTime.now().toIso8601String();
+      // final logMessage = '[$timestamp] FLUTTER ERROR:\n$error\n$stack';
+      // sendLogToServer(logMessage);
+    } ,
+    ipPort: 4040,
   );
 }
 
@@ -132,7 +145,22 @@ class _MyAppState extends State<MyApp> {
   }
 }
 ```
-## Open the Viewer
+### ▶️ OR:
+#### Clone the Repository
+```
+git clone https://github.com/postflow/log_board.git
+cd log_board
+```
+
+#### Get Dependencies
+```
+flutter pub get
+```
+#### Run the Example
+```
+flutter run --target=example/lib/main.dart
+```
+#### Open the Viewer
 http://device-ip:4040
 
 (e.g. http://192.168.1.10:4040 on the same Wi-Fi network)

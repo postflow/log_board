@@ -9,7 +9,19 @@ void main() async {
       WidgetsFlutterBinding.ensureInitialized();
       runApp(const MyApp());
     },
-    port: 4040,
+    logTransformer: (log) {
+      final timestamp = DateTime.now().toIso8601String();
+      return '[$timestamp] $log';
+    },
+    flutterOnError: (FlutterErrorDetails details) {
+      // final error = details.exceptionAsString();
+      // final stack = details.stack?.toString() ?? 'No stack trace';
+      //
+      // final timestamp = DateTime.now().toIso8601String();
+      // final logMessage = '[$timestamp] FLUTTER ERROR:\n$error\n$stack';
+      // sendLogToServer(logMessage);
+    } ,
+    ipPort: 4040,
   );
 }
 
@@ -84,9 +96,9 @@ class _MyAppState extends State<MyApp> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  throw Exception('Test error');
+                  throw Exception('Test exception');
                 },
-                child: const Text('throw Exception'),
+                child: const Text('throw test exception'),
               ),
             ],
           ),
